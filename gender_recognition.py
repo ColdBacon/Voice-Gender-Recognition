@@ -24,15 +24,15 @@ def predict(file):
     elif len(shape(signal))==1:
         signal = signal
     else:
-        raise Exception("Niewłaściwy format danych")
+        raise Exception("Wrong data format")
 
-    times = min(len(signal)/rate, 3) #ile razy funkcja hps jest wykonywana
+    times = min(len(signal)/rate, 3) 
     part_lenght=int(rate)
     parts = [signal[i*part_lenght:(i+1)*part_lenght] for i in range(int(times))]
     
     spectrum_list = []
     for signal in parts:
-        window = hamming(len(signal)) #funkcja okna 
+        window = hamming(len(signal))  
         signal = multiply(signal,window)
         spectrum_list.append(abs(fft(signal)))
     
@@ -44,7 +44,7 @@ def predict(file):
         for i in range(2, 5): 
             dec = decimate(spectrum, i) 
             hps[:len(dec)] *= dec
-        time = int(len(signal) / rate) #w sekundach
+        time = int(len(signal) / rate)
         freq_result = argmax(hps[60:])
         result = (60 + freq_result) / time
 
@@ -80,10 +80,10 @@ def check_all():
         elif check(file,predicted) == 0 and predicted == "M":
             M_false+=1
     print(suma/len(files))
-    print("KOBIETY POPRAWNIE: ", K_true)
-    print("KOBIETY NIEPOPRAWNIE: ",K_false)
-    print("MĘŻCZYŹNI POPRAWNIE: ", M_true)
-    print("MĘŻCZYŹNI NIEPOPRAWNIE: ",M_false)
+    print("WOMEN TRUE: ", K_true)
+    print("WOMEN FALSE: ",K_false)
+    print("MEN TRUE: ", M_true)
+    print("MEN FALSE: ",M_false)
 
 
 if __name__ == '__main__':
@@ -92,4 +92,4 @@ if __name__ == '__main__':
     elif len(sys.argv)==1:
         check_all()
     else:
-        raise Exception("Niepoprawna ilość argumentów")
+        raise Exception("Invalid number of arguments")
